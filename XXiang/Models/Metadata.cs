@@ -210,11 +210,14 @@ namespace XXiang.Models
 
         [DisplayName("編號")]
         public int CustomerId { get; set; }
+
+        [StringLength(30)]
         [DisplayName("名稱")]
-        //[Required(ErrorMessage = "{0}欄位不可為空!")]
+        [Required(ErrorMessage = "{0}欄位不可為空!")]
         public string Name { get; set; } = null!;
         [DisplayName("性別")]
         public bool? Sex { get; set; }
+        [EmailAddress]
         public string? Email { get; set; }
         [DisplayName("手機")]
         public string? Phone { get; set; }
