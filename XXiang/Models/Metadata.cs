@@ -211,6 +211,7 @@ namespace XXiang.Models
         [DisplayName("編號")]
         public int CustomerId { get; set; }
         [DisplayName("名稱")]
+        //[Required(ErrorMessage = "{0}欄位不可為空!")]
         public string Name { get; set; } = null!;
         [DisplayName("性別")]
         public bool? Sex { get; set; }

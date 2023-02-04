@@ -12,7 +12,7 @@ namespace XXiang.Models
         }
 
         public int CustomerId { get; set; }
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
         public bool? Sex { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }

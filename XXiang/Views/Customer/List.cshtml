@@ -25,7 +25,7 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.CustomerId)
+                    @*@Html.DisplayNameFor(model => model.CustomerId)*@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
@@ -96,7 +96,7 @@
                         </td>
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { id=item.CustomerId}) |
-                            @Html.ActionLink("Delete", "Delete","TCustomer", new { id=item.CustomerId}, new { onclick = "return confirm('確定要刪除嗎?')" })
+                            @Html.ActionLink("Delete", "Delete","Customer", new { id=item.CustomerId}, new { onclick = "return confirm('確定要刪除嗎?')" })
                         </td>
                     </tr>
                 }
