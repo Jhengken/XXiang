@@ -1,0 +1,60 @@
+﻿@model XXiang.Models.TAorder
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>建立新廣告清單</h1>
+
+<h4>訂單表格</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                <label asp-for="Supplier.Name" class="control-label"></label>
+                @Html.DropDownListFor(model => model.supplierName, (IEnumerable<SelectListItem>)ViewBag.SupplierOptions, "--Select Supplier--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+                @*<select asp-for="supplierName" asp-items="@(new SelectList(Model.Suppliers, "Name", "Name"))"></select>*@
+            </div>
+            <div class="form-group">
+                <label asp-for="Advertise.Name" class="control-label"></label>
+                @Html.DropDownListFor(model => model.advertiseName, (IEnumerable<SelectListItem>)ViewBag.AdvertiseOptions, "--Select Advertise--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AdvertiseId, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Clicks" class="control-label"></label>
+                <input asp-for="Clicks" class="form-control" />
+                <span asp-validation-for="Clicks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="List">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
