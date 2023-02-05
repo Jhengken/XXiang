@@ -1,0 +1,83 @@
+﻿@model IEnumerable<XXiang.Models.TPsiteRoom>
+
+@{
+    ViewData["Title"] = "PSiteRoomList";
+}
+
+<h1>PSiteRoomList</h1>
+
+<p>
+    @Html.ActionLink("新增房間", "PSiteRoomCreate", new { id=ViewBag.siteID,productID=ViewBag.productID }) |
+    @Html.ActionLink("回站點清單", "PSiteList", new { id=ViewBag.productID })
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SiteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HourPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ping)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SiteId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HourPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ping)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Image)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("編輯房間", "PSiteRoomEdit", new { id=item.RoomId }) |
+                @Html.ActionLink("刪除房間", "PSiteRoomDelete","Product", new { id=item.RoomId },new{ onclick="return confirm('確定要刪除嗎?')",style="color:red" })
+                </td>
+        </tr>
+}
+    </tbody>
+</table>

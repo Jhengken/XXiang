@@ -1,0 +1,67 @@
+﻿@model XXiang.Models.TPsiteRoom
+
+@{
+    ViewData["Title"] = "PSiteRoomCreate";
+}
+
+<h1>PSiteRoomCreate</h1>
+
+<h4>TPsiteRoom</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PSiteRoomCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <input asp-for="SiteId" type="hidden" value="@ViewBag.siteID" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <input asp-for="CategoryId" class="form-control" />
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HourPrice" class="control-label"></label>
+                <input asp-for="HourPrice" class="form-control" />
+                <span asp-validation-for="HourPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DatePrice" class="control-label"></label>
+                <input asp-for="DatePrice" class="form-control" />
+                <span asp-validation-for="DatePrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ping" class="control-label"></label>
+                <input asp-for="Ping" class="form-control" />
+                <span asp-validation-for="Ping" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="photo" class="control-label"></label>
+                <input asp-for="photo" type="file" class="form-control" />
+                <span asp-validation-for="photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

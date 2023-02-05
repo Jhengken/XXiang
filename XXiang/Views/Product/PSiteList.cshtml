@@ -1,0 +1,84 @@
+﻿@model IEnumerable<XXiang.Models.TPsite>
+
+@{
+    ViewData["Title"] = "PSiteList";
+}
+
+<h1>PSiteList</h1>
+
+<p>
+    @Html.ActionLink("新增站點", "PSiteCreate", new { id=ViewBag.productID }) |
+    <a asp-action="ProductList">回到產品清單</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SiteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OpenTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Longitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SiteId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                    <img src="~/images/PSite/@item.Image" width="100" height="100" style="object-fit: contain"></img>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpenTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Latitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Longitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                    @Html.ActionLink("編輯修改", "PSiteEdit", new { id=item.SiteId }) |
+                    @Html.ActionLink("新增站點空間", "PSiteRoomList", new { id=item.SiteId,productID=item.ProductId }) |
+                    @Html.ActionLink("刪除站點", "PSiteDelete","Product", new { id=item.SiteId,productID=item.ProductId },new{onclick="return confirm('確定要刪除嗎?')",style="color:red"})
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
