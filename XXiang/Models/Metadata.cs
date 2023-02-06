@@ -278,13 +278,20 @@ namespace XXiang.Models
 
         public int SupplierId { get; set; }
         [DisplayName("業者名稱")]
+        [Required(ErrorMessage = "{0}欄位不可為空!")]
         public string Name { get; set; } = null!;
+        [Required(ErrorMessage = "{0}欄位不可為空!")]
+        [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4})$", ErrorMessage = "請輸入正確的電子郵件位址.")]
         public string? Email { get; set; }
         [DisplayName("電話號碼")]
+        [Required(ErrorMessage = "{0}欄位不可為空!")]
         public string? Phone { get; set; }
         [DisplayName("密碼")]
+        [Required(ErrorMessage = "{0}欄位不可為空!")]
+        [StringLength(12, ErrorMessage = "請勿超過12個字")]
         public string? Password { get; set; }
         [DisplayName("地址")]
+        [Required(ErrorMessage = "{0}欄位不可為空!")]
         public string? Address { get; set; }
         [DisplayName("信用積分")]
         public int? CreditPoints { get; set; }
