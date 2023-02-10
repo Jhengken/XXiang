@@ -44,10 +44,9 @@ namespace XiangXiang.Controllers
                 Value = a.SupplierId.ToString(),
                 Text = a.Name
             }).ToList();
-            ViewBag.SupplierOptions = supplierOptions;
+            ViewBag.SupplierOptions = supplierOptions;            
             return View();
         }
-
         [HttpPost]
         public IActionResult Create(TAorder aorder)
         {

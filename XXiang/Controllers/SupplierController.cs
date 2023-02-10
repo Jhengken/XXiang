@@ -27,7 +27,6 @@ namespace XXiang.Controllers
         [HttpPost]
         public IActionResult Create(TSupplier p)
         {
-            dbXContext db = new dbXContext();
             _conetxt.TSuppliers.Add(p);
             _conetxt.SaveChanges();
             return RedirectToAction("List");

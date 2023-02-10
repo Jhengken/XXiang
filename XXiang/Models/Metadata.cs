@@ -104,6 +104,7 @@ namespace XXiang.Models
         public int AdvertiseId { get; set; }
         [DisplayName("廣告類型")]
         public string Name { get; set; } = null!;
+        [DisplayName("每日租金")]
         public decimal? DatePrice { get; set; }
 
         public virtual ICollection<TAorder> TAorders { get; set; }
@@ -117,9 +118,13 @@ namespace XXiang.Models
         public int AorderId { get; set; }
         public int? SupplierId { get; set; }
         public int? AdvertiseId { get; set; }
+        [DisplayName("上架日期")]
         public DateTime OrderDate { get; set; }
+        [DisplayName("下架日期")]
         public DateTime? EndDate { get; set; }
+        [DisplayName("點擊次數")]
         public int? Clicks { get; set; }
+        [DisplayName("價格")]
         public decimal? Price { get; set; }
 
         public virtual TAdvertise? Advertise { get; set; }

@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AorderId)
+                序號
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Supplier.Name)
@@ -37,10 +37,13 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @{
+            int count = 0; 
+            foreach (var item in Model) {
+                count++;
+                <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AorderId)
+                @count
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Supplier.Name)
@@ -65,6 +68,6 @@
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
-}
+}}
     </tbody>
 </table>
