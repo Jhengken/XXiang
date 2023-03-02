@@ -33,39 +33,6 @@ namespace XXiang.Models
     }
 
 
-
-    public class TPsiteRoomMetadata
-    {
-        public TPsiteRoomMetadata()
-        {
-            TCorderDetails = new HashSet<TCorderDetail>();
-            TEvaluations = new HashSet<TEvaluation>();
-        }
-
-        public int RoomId { get; set; }
-        public int? SiteId { get; set; }
-        public int? CategoryId { get; set; }
-        [DisplayName("以時計費")]
-        public decimal? HourPrice { get; set; }
-        [DisplayName("以日計費")]
-        public decimal? DatePrice { get; set; }
-        [DisplayName("坪數")]
-        public int? Ping { get; set; }
-        [DisplayName("房間圖片")]
-        public string? Image { get; set; }
-        [DisplayName("租借狀態")]
-        public bool? Status { get; set; }
-        [DisplayName("描述")]
-        public string? Description { get; set; }
-        public virtual TCategory? Category { get; set; }
-        public virtual TPsite? Site { get; set; }
-        public virtual ICollection<TCorderDetail> TCorderDetails { get; set; }
-        public virtual ICollection<TEvaluation> TEvaluations { get; set; }
-    }
-
-
-
-
     public class TPsiteMetadata
     {
         public TPsiteMetadata()
@@ -79,20 +46,55 @@ namespace XXiang.Models
         public string Name { get; set; } = null!;
         [DisplayName("站點圖片")]
         public string? Image { get; set; }
-        [DisplayName("開幕時間")]
+        [DisplayName("營業時間")]
+        //(格式為08:00~12:00,13:00~17:00)(如果有兩個時段逗點後在加時間)
         public string? OpenTime { get; set; }
+        [DisplayName("緯度")]
         public string? Latitude { get; set; }
+        [DisplayName("經度")]
         public string? Longitude { get; set; }
         [DisplayName("地址")]
         public string? Address { get; set; }
         [DisplayName("站點描述")]
         public string? Description { get; set; }
+        [DisplayName("圖檔")]
+        public IFormFile photo { get; set; }
         public virtual TProduct? Product { get; set; }
         public virtual ICollection<TPsiteRoom> TPsiteRooms { get; set; }
     }
 
 
+    public class TPsiteRoomMetadata
+    {
+        public TPsiteRoomMetadata()
+        {
+            TCorderDetails = new HashSet<TCorderDetail>();
+            TEvaluations = new HashSet<TEvaluation>();
+        }
 
+        public int RoomId { get; set; }
+        public int? SiteId { get; set; }
+        [DisplayName("空間類型")]
+        public int? CategoryId { get; set; }
+        [DisplayName("以時計費")]
+        public decimal? HourPrice { get; set; }
+        [DisplayName("以日計費")]
+        public decimal? DatePrice { get; set; }
+        [DisplayName("坪數")]
+        public int? Ping { get; set; }
+        [DisplayName("房間圖片")]
+        public string? Image { get; set; }
+        [DisplayName("租借狀態")]
+        public bool? Status { get; set; }
+        [DisplayName("描述")]
+        public string? Description { get; set; }
+        [DisplayName("圖檔")]
+        public IFormFile photo { get; set; }
+        public virtual TCategory? Category { get; set; }
+        public virtual TPsite? Site { get; set; }
+        public virtual ICollection<TCorderDetail> TCorderDetails { get; set; }
+        public virtual ICollection<TEvaluation> TEvaluations { get; set; }
+    }
 
     public class TAdvertiseMetadata
     {

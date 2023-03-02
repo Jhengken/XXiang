@@ -7,7 +7,8 @@
 <h1>PSiteList</h1>
 
 <p>
-    <a asp-action="PSiteCreate">新增站點</a>
+    @Html.ActionLink("新增站點", "PSiteCreate", new { id=ViewBag.productID }) |
+    <a asp-action="ProductList">回到產品清單</a>
 </p>
 <table class="table">
     <thead>
@@ -74,8 +75,9 @@
             </td>
             <td>
                     @Html.ActionLink("編輯修改", "PSiteEdit", new { id=item.SiteId }) |
-                    @Html.ActionLink("刪除站點", "PSiteDelete", new { id=item.SiteId })
-            </td>
+                    @Html.ActionLink("站點空間", "PSiteRoomList", new { id=item.SiteId }) |
+                    @Html.ActionLink("刪除站點", "PSiteDelete","Product", new { id=item.SiteId },new{onclick="return confirm('確定要刪除嗎?')",style="color:red"})
+                </td>
         </tr>
 }
     </tbody>

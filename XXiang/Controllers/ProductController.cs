@@ -1,5 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Policy;
+using System.Text.Json;
+using System.Xml.Linq;
 using XXiang.Models;
 
 namespace XXiang.Controllers
@@ -15,15 +23,11 @@ namespace XXiang.Controllers
         }
         public IActionResult ProductList()
         {
+            Response.Cookies.Append("currentPSiteID", "");
+
             IEnumerable<TProduct> data = null;
-            //data = from t in _conetxt.TProducts      //只select想要的
-            //       select new TProduct 
-            //       { 
-            //           ProductId=t.ProductId,
-            //           Name=t.Name,
-            //           SupplierId = t.SupplierId
-            //       };
-            data = _conetxt.TProducts.Select(x => new TProduct      //Lambda只select想要的
+
+            data = _conetxt.TProducts.Select(x => new TProduct      //Lambda select
             {
                 ProductId = x.ProductId,
                 Name = x.Name,
@@ -35,18 +39,18 @@ namespace XXiang.Controllers
         public IActionResult ProductCreate()
         {
             IEnumerable<string> dl = from t in _conetxt.TSuppliers
-                                    select t.Name;
+                                     select t.Name;
             ViewBag.datalist = dl;
             return View();
         }
         [HttpPost]
-        public IActionResult ProductCreate(TProduct tp)
+        public IActionResult ProductCreate(TProduct p)
         {
-            TSupplier supplier = _conetxt.TSuppliers.FirstOrDefault(t => t.Name.Equals(tp.SupplierName));
+            TSupplier supplier = _conetxt.TSuppliers.FirstOrDefault(t => t.Name.Equals(p.SupplierName));
             if (supplier != null)
             {
-                tp.SupplierId = supplier.SupplierId;
-                _conetxt.TProducts.Add(tp);
+                p.SupplierId = supplier.SupplierId;
+                _conetxt.TProducts.Add(p);
                 _conetxt.SaveChangesAsync();
                 return RedirectToAction("ProductList");
             }
@@ -58,17 +62,17 @@ namespace XXiang.Controllers
             {
                 TProduct x = _conetxt.TProducts.FirstOrDefault(t => t.ProductId == id);
                 if (x != null)
-                return View(x);
+                    return View(x);
             }
             return RedirectToAction("ProductList");
         }
         [HttpPost]
-        public IActionResult ProductEdit(TProduct tp)
+        public IActionResult ProductEdit(TProduct p)
         {
-            TProduct x = _conetxt.TProducts.FirstOrDefault(t => t.ProductId == tp.ProductId);
+            TProduct x = _conetxt.TProducts.FirstOrDefault(t => t.ProductId == p.ProductId);
             if (x != null)
             {
-                x.Name = tp.Name;
+                x.Name = p.Name;
                 _conetxt.SaveChangesAsync();
             }
             return RedirectToAction("ProductList");
@@ -87,35 +91,47 @@ namespace XXiang.Controllers
             return RedirectToAction("ProductList");
         }
 
+        //------------------------------PSite
 
-        //PSite
-        public IActionResult PSiteList()
+        public IActionResult PSiteList(int? id)
         {
+            Response.Cookies.Append("currentProductID", $"{id}");
+            ViewBag.productID = Request.Cookies["currentProductID"];
+
             IEnumerable<TPsite> data = null;
             data = from t in _conetxt.TPsites
+                   where t.ProductId == id
                    select t;
             return View(data);
         }
-        public IActionResult PSiteCreate()
+        public IActionResult PSiteCreate(int? id)
         {
+            ViewBag.productID = Request.Cookies["currentProductID"];
+
+            if (id == null)
+            {
+                return RedirectToAction("ProductList");
+            }
             return View();
         }
         [HttpPost]
-        public IActionResult PSiteCreate(TPsite tp)
+        public IActionResult PSiteCreate(TPsite ps)
         {
-            if (tp.photo != null)
+            if (ps.photo != null)
             {
                 string photoName = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + ".jpg";
                 string path = Path.Combine(_environment.WebRootPath, "images", "PSite", photoName); //_environment.WebRootPath + "/images/" + photoName;
-                tp.Image = photoName;
-                tp.photo.CopyToAsync(new FileStream(path, FileMode.Create));
+                ps.Image = photoName;
+                ps.photo.CopyToAsync(new FileStream(path, FileMode.Create));
             }
-            _conetxt.TPsites.Add(tp);
+            _conetxt.TPsites.Add(ps);
             _conetxt.SaveChanges();
-            return RedirectToAction("PSiteList");
+            return RedirectToAction("PSiteList", new { id = ps.ProductId });
         }
         public IActionResult PSiteEdit(int? id)
         {
+            ViewBag.productID = Request.Cookies["currentProductID"];
+
             if (id != null)
             {
                 TPsite x = _conetxt.TPsites.FirstOrDefault(t => t.SiteId.Equals(id));
@@ -124,15 +140,15 @@ namespace XXiang.Controllers
                     return View(x);
                 }
             }
-            return View("PSiteList");
+            return RedirectToAction("PSiteList", new { id = Request.Cookies["currentProductID"] });
         }
         [HttpPost]
-        public IActionResult PSiteEdit(TPsite tp)
+        public IActionResult PSiteEdit(TPsite ps)
         {
-            TPsite x = _conetxt.TPsites.FirstOrDefault(t => t.SiteId == tp.SiteId);
+            TPsite x = _conetxt.TPsites.FirstOrDefault(t => t.SiteId == ps.SiteId);
             if (x != null)
             {
-                if (tp.photo != null)
+                if (ps.photo != null)
                 {
                     string photoName = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + ".jpg";
                     string path = Path.Combine(_environment.WebRootPath, "images", "PSite", photoName);
@@ -140,22 +156,23 @@ namespace XXiang.Controllers
                     {
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
-                        string del = _environment.WebRootPath + "/images/" + x.Image.ToString();
+                        string del = Path.Combine(_environment.WebRootPath, "images", "PSite", x.Image.ToString());
                         //ContorllerBase也有定義File所以要加System.IO.來準確使用
                         System.IO.File.Delete(del);            //靜態，所以沒有dispose
                     }
                     x.Image = photoName;
-                    tp.photo.CopyTo(new FileStream(path, FileMode.Create));
+                    ps.photo.CopyTo(new FileStream(path, FileMode.Create));
                 }
-                x.Name = tp.Name;
-                x.Address = tp.Address;
-                x.Description = tp.Description;
-                x.Latitude = tp.Latitude;
-                x.Longitude = tp.Longitude;
-                x.OpenTime = tp.OpenTime;
+                x.ProductId = ps.ProductId;
+                x.Name = ps.Name;
+                x.Address = ps.Address;
+                x.Description = ps.Description;
+                x.Latitude = ps.Latitude;
+                x.Longitude = ps.Longitude;
+                x.OpenTime = ps.OpenTime;
                 _conetxt.SaveChangesAsync();
             }
-            return RedirectToAction("PSiteList");
+            return RedirectToAction("PSiteList", new { id = x.ProductId });
         }
         public IActionResult PSiteDelete(int? id)
         {
@@ -168,28 +185,146 @@ namespace XXiang.Controllers
                     _conetxt.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("PSiteList");
+            if (Request.Cookies["currentProductID"] != null)
+            {
+                return RedirectToAction("PSiteList", new { id = Request.Cookies["currentProductID"] });
+            }
+            return RedirectToAction("ProductList");
         }
 
+        //------------------------------PSiteRoom
 
-
-
-        //PSiteRoom
-        public IActionResult PSiteRoomList()
+        public IActionResult PSiteRoomList(int? id)
         {
+            Response.Cookies.Append("currentSiteID", $"{id}");
+            ViewBag.productID = Request.Cookies["currentProductID"];
+            ViewBag.siteID = Request.Cookies["currentSiteID"];
+
+            IEnumerable<TPsiteRoom> data = null;
+            data = _conetxt.TPsiteRooms.Where(t => t.SiteId == id).Select(t => new TPsiteRoom
+            {
+                RoomId = t.RoomId,
+                SiteId = t.SiteId,
+                CategoryId = t.CategoryId,
+                HourPrice = t.HourPrice,
+                DatePrice = t.DatePrice,
+                Ping = t.Ping,
+                Image = t.Image,
+                Status = t.Status,
+                Description = t.Description
+            });
+            return View(data);
+        }
+        public IActionResult PSiteRoomCreate(int? id)
+        {
+            ViewBag.productID = Request.Cookies["currentProductID"];
+            ViewBag.siteID = Request.Cookies["currentSiteID"];
+
+            if (id == null)
+            {
+                return RedirectToAction("PSiteList", new { id = Request.Cookies["currentProductID"] });
+            }
+            IEnumerable<SelectListItem> items = new List<SelectListItem>();
+            items = _conetxt.TCategories.Select(t => new SelectListItem
+            {
+                Text = t.Name,
+                Value = t.CategoryId.ToString(),
+                Selected = t.CategoryId.Equals(3)
+            });
+
+            ViewBag.CategoryId = items;
             return View();
         }
-        public IActionResult PSiteRoomCreate()
+        [HttpPost]
+        public IActionResult PSiteRoomCreate(TPsiteRoom psr)
         {
-            return View();
+            if (psr.photo != null)
+            {
+                string photoName = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + ".jpg";
+                string path = Path.Combine(_environment.WebRootPath, "images", "PSiteRoom", photoName);
+                psr.Image = photoName;
+                psr.photo.CopyToAsync(new FileStream(path, FileMode.Create));
+            }
+            _conetxt.TPsiteRooms.Add(psr);
+            _conetxt.SaveChanges();
+            return RedirectToAction("PSiteRoomList", new { id = psr.SiteId });
         }
-        public IActionResult PSiteRoomEdit()
+        public IActionResult PSiteRoomEdit(int? id)
         {
-            return View();
+            ViewBag.siteID = Request.Cookies["currentSiteID"];
+
+            if (id != null)
+            {
+                TPsiteRoom x = _conetxt.TPsiteRooms.FirstOrDefault(t => t.RoomId == id);
+                if (x != null)
+                {
+                    IEnumerable<SelectListItem> items = new List<SelectListItem>();
+                    items = _conetxt.TCategories.Select(t => new SelectListItem
+                    {
+                        Text = t.Name,
+                        Value = t.CategoryId.ToString(),
+                        Selected = t.CategoryId.Equals(3)
+                    });
+                    ViewBag.CategoryId = items;
+                    return View(x);
+                }
+            }
+            return RedirectToAction("PSiteRoomList", new { id = Request.Cookies["currentSiteID"] });
         }
-        public IActionResult PSiteRoomDelete()
+        [HttpPost]
+        public IActionResult PSiteRoomEdit(TPsiteRoom psr)
         {
-            return View();
+            TPsiteRoom x = _conetxt.TPsiteRooms.FirstOrDefault(t => t.RoomId == psr.RoomId);
+            if (x != null)
+            {
+                //x.Image = "";   //試試看能不能null
+                if (psr.photo != null)
+                {
+                    string photoName = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + ".jpg";
+                    string path = Path.Combine(_environment.WebRootPath, "images", "PSiteRoom", photoName);
+                    if (x.Image != null)
+                    {
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                        string del = Path.Combine(_environment.WebRootPath, "images", "PSiteRoom", x.Image.ToString());
+                        //ContorllerBase也有定義File所以要加System.IO.來準確使用
+                        System.IO.File.Delete(del);
+                    }
+                    x.Image = photoName;
+                    psr.photo.CopyTo(new FileStream(path, FileMode.Create));
+                }
+                x.SiteId = psr.SiteId;
+                x.CategoryId = psr.CategoryId;
+                x.HourPrice = psr.HourPrice;
+                x.DatePrice = psr.DatePrice;
+                x.Ping = psr.Ping;
+                x.Status = psr.Status;
+                x.Description = psr.Description;
+                _conetxt.SaveChangesAsync();
+            }
+            return RedirectToAction("PSiteRoomList", new { id = Request.Cookies["currentSiteID"] });
+        }
+        public IActionResult PSiteRoomDelete(int? id)
+        {
+            if (id != null)
+            {
+                TPsiteRoom del = _conetxt.TPsiteRooms.FirstOrDefault(t => t.RoomId == id);
+                if (del != null)
+                {
+                    _conetxt.TPsiteRooms.Remove(del);
+                    _conetxt.SaveChangesAsync();
+                }
+            }
+
+            if (Request.Cookies["currentSiteID"] != null)
+            {
+                return RedirectToAction("PSiteRoomList", new { id = Request.Cookies["currentSiteID"] });
+            }
+            if (Request.Cookies["currentProductID"] != null)
+            {
+                return RedirectToAction("PSiteList", new { id = Request.Cookies["currentProductID"] });
+            }
+            return View("ProductList");
         }
     }
 }
