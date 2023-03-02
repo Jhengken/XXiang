@@ -33,6 +33,36 @@ namespace XXiang.Models
     }
 
 
+    public class TPsiteMetadata
+    {
+        public TPsiteMetadata()
+        {
+            TPsiteRooms = new HashSet<TPsiteRoom>();
+        }
+
+        public int SiteId { get; set; }
+        public int? ProductId { get; set; }
+        [DisplayName("站點名稱")]
+        public string Name { get; set; } = null!;
+        [DisplayName("站點圖片")]
+        public string? Image { get; set; }
+        [DisplayName("營業時間")]
+        //(格式為08:00~12:00,13:00~17:00)(如果有兩個時段逗點後在加時間)
+        public string? OpenTime { get; set; }
+        [DisplayName("緯度")]
+        public string? Latitude { get; set; }
+        [DisplayName("經度")]
+        public string? Longitude { get; set; }
+        [DisplayName("地址")]
+        public string? Address { get; set; }
+        [DisplayName("站點描述")]
+        public string? Description { get; set; }
+        [DisplayName("圖檔")]
+        public IFormFile photo { get; set; }
+        public virtual TProduct? Product { get; set; }
+        public virtual ICollection<TPsiteRoom> TPsiteRooms { get; set; }
+    }
+
 
     public class TPsiteRoomMetadata
     {
@@ -44,6 +74,7 @@ namespace XXiang.Models
 
         public int RoomId { get; set; }
         public int? SiteId { get; set; }
+        [DisplayName("空間類型")]
         public int? CategoryId { get; set; }
         [DisplayName("以時計費")]
         public decimal? HourPrice { get; set; }
@@ -68,34 +99,6 @@ namespace XXiang.Models
 
 
 
-    public class TPsiteMetadata
-    {
-        public TPsiteMetadata()
-        {
-            TPsiteRooms = new HashSet<TPsiteRoom>();
-        }
-
-        public int SiteId { get; set; }
-        public int? ProductId { get; set; }
-        [DisplayName("站點名稱")]
-        public string Name { get; set; } = null!;
-        [DisplayName("站點圖片")]
-        public string? Image { get; set; }
-        [DisplayName("營業時間(格式為08:00~12:00,13:00~17:00)(如果有兩個時段逗點後在加時間)")]
-        public string? OpenTime { get; set; }
-        [DisplayName("緯度")]
-        public string? Latitude { get; set; }
-        [DisplayName("經度")]
-        public string? Longitude { get; set; }
-        [DisplayName("地址")]
-        public string? Address { get; set; }
-        [DisplayName("站點描述")]
-        public string? Description { get; set; }
-        [DisplayName("圖檔")]
-        public IFormFile photo { get; set; }
-        public virtual TProduct? Product { get; set; }
-        public virtual ICollection<TPsiteRoom> TPsiteRooms { get; set; }
-    }
 
 
 

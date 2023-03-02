@@ -1,8 +1,5 @@
 ﻿@model XXiang.Models.TProduct
-@*之後可以用cookie做message*@
-@*<script type="text/javascript">
-    alert(@ViewBag.message);
-</script>*@
+
 @{
     ViewData["Title"] = "ProductCreate";
 }
@@ -15,18 +12,12 @@
     <div class="col-md-4">
         <form asp-action="ProductCreate">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-@*            <div class="form-group">
-                <label asp-for="ProductId" class="control-label"></label>
-                <input asp-for="ProductId" type="text" class="form-control" />
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="SupplierName" class="control-label"></label>
-                <input asp-for="SupplierName" class="form-control" list="Supplier" />
-                @*<input name="SupplierName" type="text" class="form-control" list="Supplier" />*@
+                <input asp-for="SupplierName" class="form-control" list="Supplier" autocomplete="off" placeholder="(請選擇業者)" />
                 <datalist id="Supplier">
-                @foreach (var d in ViewBag.datalist){
-                    <option value="@d"></option>
+                @foreach (var ditem in ViewBag.datalist){
+                    <option value="@ditem"></option>
                 }
                 </datalist>
                 <span asp-validation-for="SupplierName" class="text-danger"></span>

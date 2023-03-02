@@ -1,7 +1,6 @@
 ﻿@model XXiang.Models.TPsite
-
 @{
-    ViewData["Title"] = "PSiteEdit";
+ViewData["Title"] = "PSiteEdit";
 }
 
 <h1>PSiteEdit</h1>
@@ -10,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="PSiteEdit">
+        <form asp-action="PSiteEdit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <input asp-for="SiteId" type="hidden" class="form-control" />
@@ -24,12 +23,13 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <label asp-for="photo" class="control-label"></label>
+                <input id="photo" type="file" name="photo" class="form-control" style="opacity: 100; position: unset;" />
+                <span asp-validation-for="photo" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group">                
                 <label asp-for="OpenTime" class="control-label"></label>
+                <label asp-for="OpenTime" class="control-label" style="font-size:xx-small">(格式為08:00~12:00,13:00~17:00)(如果有兩個時段逗點後在加時間)</label>
                 <input asp-for="OpenTime" class="form-control" />
                 <span asp-validation-for="OpenTime" class="text-danger"></span>
             </div>
@@ -62,7 +62,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="PSiteList" asp-route-id="@ViewBag.productID">Back to PSiteList</a>
 </div>
 
 @section Scripts {
