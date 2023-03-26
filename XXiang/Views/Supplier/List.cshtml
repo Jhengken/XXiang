@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<XXiang.Models.TSupplier>
 
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "SupplierList";
 }
 
 <h1>業者資料一覽表</h1>
@@ -25,9 +25,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
-            <th>
+          @*  <th>
                 @Html.DisplayNameFor(model => model.Password)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
@@ -60,9 +60,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
+            @*<td>
+               @Html.DisplayFor(modelItem => item.Password)
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
