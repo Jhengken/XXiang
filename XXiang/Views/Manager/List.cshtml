@@ -4,16 +4,16 @@
     ViewData["Title"] = "List";
 }
 
-<h1>List</h1>
+<h1>管理者資料一覽表</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">新增</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ManagerId)
+                序
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -49,9 +49,8 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("修改", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("刪除", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
 }

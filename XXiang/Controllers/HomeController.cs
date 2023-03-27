@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Text.Json;
 using XXiang.Models;
+using XXiang.VIewModels;
 
 namespace XXiang.Controllers
 {
@@ -27,6 +29,20 @@ namespace XXiang.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Login(SLoginViewModel vm)
+        {
+            TManager user = new dbXContext().TManagers.FirstOrDefault(
+                t => t.Email.Equals(vm.txtAccount) && t.Password.Equals(vm.txtPassword));
+            if (user != null && user.Password.Equals(vm.txtPassword))
+            {
+                string json = JsonSerializer.Serialize(user);
+                HttpContext.Session.SetString(Dictionary.SK_LOGINED_USER, json);
+                return RedirectToAction("Index");
+            }
+
+            return View();
         }
     }
 }
